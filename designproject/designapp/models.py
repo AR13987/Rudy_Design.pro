@@ -33,11 +33,12 @@ class DesignSuggestion(models.Model):
 
 from django.db import models
 
+# Заявки:
 class Application(models.Model):
     title = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=50)  # Например, 'accepted', 'in_progress', 'completed'
+    status = models.CharField(max_length=50)  # Например, 'Принято в работу' или 'Выполнено'
 
     def __str__(self):
         return self.title

@@ -6,8 +6,7 @@ from .models import Project, FloorPlan, DesignSuggestion, Application
 def index(request):
     # Получаем последние выполненные заявки из базы данных
     applications = Application.objects.all().order_by('-timestamp')[:4]  # Получаем последние 4 заявки
-    accepted_count = Application.objects.filter(
-        status='Принято в работу').count()  # Подсчет заявок в статусе "Принято в работу"
+    accepted_count = Application.objects.filter(status='Принято в работу').count()  # Подсчет заявок в статусе "Принято в работу"
 
     context = {
         'applications': applications,

@@ -1,10 +1,26 @@
 from django.db import models
 
 # Create your models here.
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, Group, Permission
+class CustomUser(AbstractUser):
+    groups = models.ManyToManyField(
+        Group,
+        related_name='custom_users',  # Уникальное имя для доступа к пользователям из группы
+        blank=True,
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='custom_users',  # Уникальное имя для доступа к пользователям с разрешениями
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.username
+
+
 from django.urls import reverse
 class Project(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='projects')
     title = models.CharField(max_length=255)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -30,7 +46,7 @@ class FloorPlan(models.Model):
 
 class DesignSuggestion(models.Model):
     floor_plan = models.ForeignKey(FloorPlan, on_delete=models.CASCADE, related_name='design_suggestions')
-    designer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='design_suggestions')
+    designer = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='design_suggestions')
     suggestion_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -40,8 +56,6 @@ class DesignSuggestion(models.Model):
     def __str__(self):
         return f"Предложение по {self.floor_plan}"
 
-
-from django.db import models
 
 # Заявки:
 class Application(models.Model):

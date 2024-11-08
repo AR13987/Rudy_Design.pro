@@ -13,3 +13,8 @@ def index(request):
         'accepted_count': accepted_count,
     }
     return render(request, 'index.html', context)
+
+
+from django.views import generic
+class ApplicationListView(generic.ListView):
+    model = Application

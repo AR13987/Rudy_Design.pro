@@ -13,6 +13,11 @@
         <nav>
             <ul>
                 <li><a href="{% url 'index' %}">Главная</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'profile' %}">Личный кабинет</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}">Войти</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

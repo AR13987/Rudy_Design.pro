@@ -15,8 +15,13 @@
                 <li><a href="{% url 'index' %}">Главная</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'profile' %}">Личный кабинет</a></li>
+                <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+                </form>
                 {% else %}
                 <li><a href="{% url 'login' %}">Войти</a></li>
+                <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрируйтесь!</a></p>
                 {% endif %}
             </ul>
         </nav>

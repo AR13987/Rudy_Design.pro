@@ -37,11 +37,28 @@ def register(request):
                  password=form.cleaned_data['password'],
                  first_name=form.cleaned_data['first_name'],
                  last_name=form.cleaned_data['last_name'],
-                 middle_name=form.cleaned_data['middle_name'],
              )
              messages.success(request, 'Регистрация прошла успешно!')
-             return redirect('register')  # перенаправление на страницу регистрации или входа
+             return redirect('index')  # перенаправление на страницу регистрации или входа
     else:
         form = RegistrationForm()
 
     return render(request, 'registration/register.html', {'form': form})
+
+
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            # Неверные учетные данные
+            error_message = "Неверное имя пользователя или пароль."
+            return render(request, 'login.html', {'error_message': error_message})
+    return render(request, 'login.html')

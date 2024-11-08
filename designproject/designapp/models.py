@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import AbstractUser, Group, Permission
 class CustomUser(AbstractUser):
+    middle_name = models.CharField(max_length=30, blank=True)
     groups = models.ManyToManyField(
         Group,
         related_name='custom_users',  # Уникальное имя для доступа к пользователям из группы

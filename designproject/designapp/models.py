@@ -18,7 +18,7 @@ class FloorPlan(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Floor Plan for {self.project.title}"
+        return f"План этажа для {self.project.title}"
 
 
 class DesignSuggestion(models.Model):
@@ -28,4 +28,16 @@ class DesignSuggestion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Suggestion for {self.floor_plan}"
+        return f"Предложение по {self.floor_plan}"
+
+
+from django.db import models
+
+class Application(models.Model):
+    title = models.CharField(max_length=255)
+    category = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=50)  # Например, 'accepted', 'in_progress', 'completed'
+
+    def __str__(self):
+        return self.title

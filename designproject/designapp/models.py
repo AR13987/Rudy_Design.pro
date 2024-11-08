@@ -18,7 +18,7 @@ class FloorPlan(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"План этажа для {self.project.title}"
+        return f"План для {self.project.title}"
 
 
 class DesignSuggestion(models.Model):

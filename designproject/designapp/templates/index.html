@@ -2,9 +2,9 @@
 {% block title %}<title>Главная страница</title>{% endblock %}
 {% block content %}
 <h2>Последние выполненные заявки</h2>
-            <div class="applications">
-                <!-- Пример заявок -->
-                {% for application in applications %}
+<div class="applications">
+    <!-- Пример заявок -->
+    {% for application in applications %}
     <div class="application">
         <img src="{{ application.image.url }}" alt="{{ application.title }}">
         <p><strong>Временная метка:</strong> {{ application.timestamp }}</p>

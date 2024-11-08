@@ -39,7 +39,7 @@ def register(request):
                  last_name=form.cleaned_data['last_name'],
              )
              messages.success(request, 'Регистрация прошла успешно!')
-             return redirect('index')  # перенаправление на страницу регистрации или входа
+             return redirect('index')
     else:
         form = RegistrationForm()
 
@@ -60,5 +60,5 @@ def login_view(request):
         else:
             # Неверные учетные данные
             error_message = "Неверное имя пользователя или пароль."
-            return render(request, 'login.html', {'error_message': error_message})
-    return render(request, 'login.html')
+            return render(request, 'registration/login.html', {'error_message': error_message})
+    return render(request, 'registration/login.html')

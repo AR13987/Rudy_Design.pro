@@ -8,7 +8,7 @@ body {
 }
 
 header {
-    background-color: #333;
+    background-color: #FFA500;
     color: #fff;
     padding: 15px 20px;
     text-align: center;
@@ -83,7 +83,7 @@ main {
 footer {
     text-align: center;
     padding: 15px 0;
-    background-color: #333;
+    background-color: #004524;
     color: white;
     position: relative; /* Чтобы подвал оставался внизу страницы */
 }

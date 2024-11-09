@@ -21,6 +21,7 @@ class ApplicationListView(generic.ListView):
     model = Application
 
 
+from django.shortcuts import redirect
 from .forms import CustomUserCreationForm
 def register(request):
     if request.method == 'POST':
@@ -37,11 +38,10 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 
-from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import redirect
+from .forms import CustomAuthenticationForm
 def login_user(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -51,15 +51,13 @@ def login_user(request):
                 return redirect('designapp:index')
             else:
                 form.add_error(None, 'Неверный логин или пароль.')
-        else:
-            # Ошибки в форме
-            pass
     else:
-        form = AuthenticationForm()
+        form = CustomAuthenticationForm()
+
     return render(request, 'registration/login.html', {'form': form})
 
 
 from django.contrib.auth import login, authenticate, logout
 def logout_user(request):
     logout(request)
-    return render(request,'designapp/logged_out.html')
+    return render(request,'registration/logged_out.html')

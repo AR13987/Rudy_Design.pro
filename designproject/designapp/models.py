@@ -5,9 +5,9 @@ from django.contrib.auth.models import AbstractUser
 import re
 class CustomUser(AbstractUser):
     middle_name = models.CharField(max_length=150, blank=True, verbose_name='Отчество')
-    password1 = models.CharField(max_length=128, blank=True, null=True)
-    password2 = models.CharField(max_length=128, blank=True, null=True)
-    consent = models.BooleanField(default=False)
+    password1 = models.CharField(max_length=128, blank=True, null=True, verbose_name='Пароль')
+    password2 = models.CharField(max_length=128, blank=True, null=True, verbose_name='Повтор пароля')
+    consent = models.BooleanField(default=False, verbose_name='Я соглашаюсь на обработку моих персональных данных')
 
     def clean(self):
         super().clean()

@@ -30,13 +30,13 @@
             <div class="error">{{ error }}</div>
         {% endfor %}
 
-        {{ form.password.label }} {{ form.password }}
-        {% for error in form.password.errors %}
+        {{ form.password1.label }} {{ form.password1 }}
+        {% for error in form.password1.errors %}
             <div class="error">{{ error }}</div>
         {% endfor %}
 
-        {{ form.confirm_password.label }} {{ form.confirm_password }}
-        {% for error in form.confirm_password.errors %}
+        {{ form.password2.label }} {{ form.password2 }}
+        {% for error in form.password2.errors %}
             <div class="error">{{ error }}</div>
         {% endfor %}
 

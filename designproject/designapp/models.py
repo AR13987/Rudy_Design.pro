@@ -1,22 +1,27 @@
+from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.contrib.auth.models import User
-# Create your models here.
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100, blank=True)
-    last_name = models.CharField(max_length=100, blank=True)
-    phone_number = models.CharField(max_length=20, blank=True)
-    gender = models.CharField(max_length=10, choices=[('male', 'Мужской'), ('female', 'Женский')], blank=True)
-    avatar = models.ImageField(upload_to='user_avatars', blank=True)
-    email = models.EmailField(max_length=254, blank=True, null=True)
+from django.contrib.auth.models import AbstractUser
+import re
+class CustomUser(AbstractUser):
+    middle_name = models.CharField(max_length=150, blank=True, verbose_name='Отчество')
+    password1 = models.CharField(max_length=128, blank=True, null=True)
+    password2 = models.CharField(max_length=128, blank=True, null=True)
+    consent = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.user.username
+    def clean(self):
+        super().clean()
+        if not re.match(r'^[А-Яа-яЁёs-]*$', self.last_name):
+            raise ValidationError('Фамилия должна содержать только кириллические буквы, пробелы и дефисы.')
+        if not re.match(r'^[А-Яа-яЁёs-]*$', self.first_name):
+            raise ValidationError('Имя должно содержать только кириллические буквы, пробелы и дефисы.')
+        if self.middle_name and not re.match(r'^[А-Яа-яЁёs-]*$', self.middle_name):
+            raise ValidationError('Отчество должно содержать только кириллические буквы, пробелы и дефисы.')
 
 
 from django.urls import reverse
 class Project(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='projects')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projects')
     title = models.CharField(max_length=255)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -42,7 +47,7 @@ class FloorPlan(models.Model):
 
 class DesignSuggestion(models.Model):
     floor_plan = models.ForeignKey(FloorPlan, on_delete=models.CASCADE, related_name='design_suggestions')
-    designer = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, related_name='design_suggestions')
+    designer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='design_suggestions')
     suggestion_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

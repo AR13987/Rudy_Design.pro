@@ -55,7 +55,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'designproject.urls'
 
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'designapp.CustomUser'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from .models import Project, FloorPlan, DesignSuggestion, Application, UserProfile
+from .models import Project, FloorPlan, DesignSuggestion, Application
 
 
 def index(request):
@@ -16,22 +16,25 @@ def index(request):
     return render(request, 'designapp/index.html', context)
 
 
-
 from django.views import generic
 class ApplicationListView(generic.ListView):
     model = Application
 
-from django.contrib.auth.forms import UserCreationForm
-def signup(request):
+
+from .forms import CustomUserCreationForm
+def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password1'])  # Хранение пароля в зашифрованном виде
+            user.save()
             login(request, user)
             return redirect('designapp:index')
     else:
-        form = UserCreationForm()
-    return render(request, 'designapp/register.html', {'form': form})
+        form = CustomUserCreationForm()
+
+    return render(request, 'registration/register.html', {'form': form})
 
 
 from django.contrib.auth.forms import AuthenticationForm
@@ -54,6 +57,7 @@ def login_user(request):
     else:
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
+
 
 from django.contrib.auth import login, authenticate, logout
 def logout_user(request):

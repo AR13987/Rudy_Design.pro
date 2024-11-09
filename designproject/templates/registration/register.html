@@ -46,11 +46,11 @@
     </form>
 
     {% if messages %}
-      <ul class="errorlist">
-          {% for message in messages %}
-              <li>{{ message }}</li>
-          {% endfor %}
-      </ul>
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
     {% endif %}
 </div>
 {% endblock %}

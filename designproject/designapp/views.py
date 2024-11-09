@@ -22,24 +22,39 @@ class ApplicationListView(generic.ListView):
     model = Application
 
 
-
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from django.contrib import messages
 from .models import CustomUser
+from django.db import IntegrityError
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-             user = CustomUser.objects.create_user(
-                 username=form.cleaned_data['username'],
-                 email=form.cleaned_data['email'],
-                 password=form.cleaned_data['password'],
-                 first_name=form.cleaned_data['first_name'],
-                 last_name=form.cleaned_data['last_name'],
-             )
-             messages.success(request, 'Регистрация прошла успешно!')
-             return redirect('index')
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            first_name = form.cleaned_data.get('first_name', '')
+            last_name = form.cleaned_data.get('last_name', '')
+
+            if CustomUser.objects.filter(email=email).exists():
+                messages.error(request, 'Этот адрес электронной почты уже зарегистрирован.')
+            else:
+                try:
+                    user = CustomUser.objects.create_user(
+                        username=username,
+                        email=email,
+                        password=password,
+                        first_name=first_name,
+                        last_name=last_name,
+                    )
+                    messages.success(request, 'Регистрация прошла успешно!')
+                    return redirect('index')
+                except IntegrityError:
+                    messages.error(request, 'Имя пользователя уже существует. Пожалуйста, выберите другое имя.')
+
+        return render(request, 'registration/register.html', {'form': form})
+
     else:
         form = RegistrationForm()
 

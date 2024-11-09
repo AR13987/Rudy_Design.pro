@@ -1,27 +1,22 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
-from django.contrib.auth.models import AbstractUser, Group, Permission
-class CustomUser(AbstractUser):
-    middle_name = models.CharField(max_length=30, blank=True)
-    groups = models.ManyToManyField(
-        Group,
-        related_name='custom_users',  # Уникальное имя для доступа к пользователям из группы
-        blank=True,
-    )
-    user_permissions = models.ManyToManyField(
-        Permission,
-        related_name='custom_users',  # Уникальное имя для доступа к пользователям с разрешениями
-        blank=True,
-    )
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True)
+    gender = models.CharField(max_length=10, choices=[('male', 'Мужской'), ('female', 'Женский')], blank=True)
+    avatar = models.ImageField(upload_to='user_avatars', blank=True)
+    email = models.EmailField(max_length=254, blank=True, null=True)
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
 
 from django.urls import reverse
 class Project(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='projects')
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='projects')
     title = models.CharField(max_length=255)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -47,7 +42,7 @@ class FloorPlan(models.Model):
 
 class DesignSuggestion(models.Model):
     floor_plan = models.ForeignKey(FloorPlan, on_delete=models.CASCADE, related_name='design_suggestions')
-    designer = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='design_suggestions')
+    designer = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, related_name='design_suggestions')
     suggestion_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

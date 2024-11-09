@@ -12,16 +12,16 @@
         <h1>Добро пожаловать на наш сайт!</h1>
         <nav>
             <ul>
-                <li><a href="{% url 'index' %}">Главная</a></li>
+                <li><a href="{% url 'designapp:index' %}">Главная</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'profile' %}">Личный кабинет</a></li>
-                <form method="post" action="{% url 'logout' %}">
+                <li><a href="{% url 'designapp:profile' %}">Личный кабинет</a></li>
+                <form method="post" action="{% url 'designapp:logout' %}">
                 {% csrf_token %}
                 <button type="submit">Выйти</button>
                 </form>
                 {% else %}
-                <li><a href="{% url 'login' %}">Войти</a></li>
-                <li>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрируйтесь!</a></li>
+                <li><a href="{% url 'designapp:login' %}">Войти</a></li>
+                <li>Нет аккаунта? <a href="{% url 'designapp:signup' %}">Зарегистрируйтесь!</a></li>
                 {% endif %}
             </ul>
         </nav>

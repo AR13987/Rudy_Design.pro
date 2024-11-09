@@ -1,10 +1,12 @@
 from django.urls import path
 from . import views
-from .views import register
+
+app_name = 'designapp'
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('profile/', views.ApplicationListView.as_view(), name='profile'),
-    path('register/', register, name='register'),
-    path('login/', views.login_view, name='login'),
+    path('signup/', views.signup, name='signup'),
+    path('login/', views.login_user, name='login'),
+    path('logout/', views.logout_user, name='logout'),
 ]

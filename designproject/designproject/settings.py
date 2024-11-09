@@ -55,7 +55,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'designproject.urls'
 
-AUTH_USER_MODEL = 'designapp.CustomUser'
+AUTH_USER_MODEL = 'auth.User'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 TEMPLATES = [
     {
@@ -86,7 +90,7 @@ DATABASES = {
     }
 }
 
-
+LOGIN_REDIRECT_URL = '/'
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

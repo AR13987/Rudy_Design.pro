@@ -4,9 +4,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import re
 class CustomUser(AbstractUser):
-    middle_name = models.CharField(max_length=150, blank=True, verbose_name='Отчество')
-    password1 = models.CharField(max_length=128, blank=True, null=True, verbose_name='Пароль')
-    password2 = models.CharField(max_length=128, blank=True, null=True, verbose_name='Повтор пароля')
+    first_name = models.CharField(max_length=150, blank=False, verbose_name='Имя')
+    last_name = models.CharField(max_length=150, blank=False, verbose_name='Фамилия')
+    username = models.CharField(max_length=150, unique=True, blank=False, verbose_name='Логин')
+    email = models.EmailField(unique=True, blank=False, verbose_name='Электронная почта')
+    middle_name = models.CharField(max_length=150, blank=False, verbose_name='Отчество')
+    password1 = models.CharField(max_length=128, blank=False, null=True, verbose_name='Пароль')
+    password2 = models.CharField(max_length=128, blank=False, null=True, verbose_name='Повтор пароля')
     consent = models.BooleanField(default=False, verbose_name='Я соглашаюсь на обработку моих персональных данных')
 
     def clean(self):
@@ -17,6 +21,8 @@ class CustomUser(AbstractUser):
             raise ValidationError('Имя должно содержать только кириллические буквы, пробелы и дефисы.')
         if self.middle_name and not re.match(r'^[А-Яа-яЁёs-]*$', self.middle_name):
             raise ValidationError('Отчество должно содержать только кириллические буквы, пробелы и дефисы.')
+        if not self.consent:
+            raise ValidationError('Необходимо согласие на обработку персональных данных.')
 
 
 from django.urls import reverse

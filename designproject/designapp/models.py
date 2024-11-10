@@ -25,6 +25,12 @@ class CustomUser(AbstractUser):
             raise ValidationError('Необходимо согласие на обработку персональных данных.')
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 from django.urls import reverse
 class Project(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projects')
@@ -65,13 +71,27 @@ class DesignSuggestion(models.Model):
 
 
 # Заявки:
+import os
 class Application(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
     timestamp = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     status = models.CharField(max_length=50, default='Новая')  # Например, 'Принято в работу', 'Выполнено', 'Новая'
+    photo = models.ImageField(upload_to='photos/', null=True, blank=False)
+
+    @property
+    def photo_name(self):
+        return os.path.basename(self.photo.name)
+
+    def clean(self):
+        super().clean()
+        if self.photo:
+            if self.photo.size > 2 * 1024 * 1024:  # 2 MB
+                raise ValidationError("Размер фото не должен превышать 2 МБ.")
+            if not self.photo.name.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+                raise ValidationError("Недопустимый формат файла. Используйте jpg, jpeg, png, bmp.")
 
     def get_absolute_url(self):
         return reverse('application-detail', args=[str(self.id)])

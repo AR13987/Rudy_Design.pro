@@ -5,19 +5,13 @@
         <div class="sidebar">
             <h2>Меню</h2>
             <ul>
+                <li><a href="{% url 'designapp:application-create' %}">Создание заявки</a></li>
+
             </ul>
         </div>
 
         <main>
-            <h2>Мои заявки</h2>
-
-            <!-- Форма для фильтрации -->
-            <form method="get" action="">
-                <label for="status">Новые заявки:</label>
-                <select name="status" id="status" onchange="this.form.submit()">
-                    <option value="Новая">Новая</option>
-                </select>
-            </form>
+            <h2>Мои заявки:</h2>
 
             <table>
                 <thead>
@@ -26,15 +20,17 @@
                         <th>Категория</th>
                         <th>Дата создания</th>
                         <th>Статус</th>
+                        <th>Изображение</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for application in applications %}
                     <tr>
-                        <td><a href="{{ application.get_absolute_url }}">{{ application.title }}</a></td>
+                        <td>{{ application.title }}</td>
                         <td>{{ application.category }}</td>
                         <td>{{ application.timestamp }}</td>
                         <td>{{ application.status }}</td>
+                        <td>{{ application.photo_name }}</td>
                     </tr>
                     {% empty %}
                     <tr>

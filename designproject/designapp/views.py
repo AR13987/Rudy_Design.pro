@@ -30,6 +30,21 @@ class ApplicationListView(generic.ListView):
         return queryset
 
 
+from .forms import ApplicationForm
+def create_application(request):
+    if request.method == 'POST':
+        form = ApplicationForm(request.POST, request.FILES)
+        if form.is_valid():
+            application = form.save(commit=False)  # Не сохраняем сразу
+            application.user = request.user  # Устанавливаем текущего пользователя
+            application.save()
+            return redirect('designapp:profile')
+    else:
+        form = ApplicationForm()
+
+    return render(request, 'designapp/application_create.html', {'form': form})
+
+
 from django.shortcuts import redirect
 from .forms import CustomUserCreationForm
 def register(request):

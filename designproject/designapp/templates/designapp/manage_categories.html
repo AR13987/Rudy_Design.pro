@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}<title>Управление категориями заявок</title>{% endblock %}
+{% block content %}
+<a href="{% url 'designapp:admin-profile' %}">Назад</a>
+<h2>Управление категориями заявок</h2>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<form method="post" action="{% url 'designapp:admin-category-add' %}">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Название категории" required>
+    <button type="submit">Добавить категорию</button>
+</form>
+
+<h3>Список категорий:</h3>
+<ul>
+    {% for category in categories %}
+        <li>
+            {{ category.name }}
+            <form method="post" action="{% url 'designapp:admin-category-delete' category.id %}">
+                {% csrf_token %}
+                <button type="submit">Удалить</button>
+            </form>
+        </li>
+    {% empty %}
+        <li>Категорий нет.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

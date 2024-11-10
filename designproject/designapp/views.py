@@ -6,7 +6,7 @@ from .models import Project, FloorPlan, DesignSuggestion, Application
 
 def index(request):
     # Получаем последние выполненные заявки из базы данных
-    applications = Application.objects.all().order_by('-timestamp')[:4]  # Получаем последние 4 заявки
+    applications = Application.objects.filter(status='Выполнено').order_by('-timestamp')[:4]  # Получаем последние 4 выполненные заявки
     accepted_count = Application.objects.filter(status='Принято в работу').count()  # Подсчет заявок в статусе "Принято в работу"
 
     context = {
@@ -103,3 +103,46 @@ class AdminProfileView(LoginRequiredMixin, UserPassesTestMixin, generic.Template
 
     def test_func(self):
         return self.request.user.is_superuser  # Проверка, является ли пользователь администратором
+
+
+
+from django.contrib import messages
+from .models import Category
+from django.views import View
+class CategoryListView(LoginRequiredMixin, UserPassesTestMixin, View):
+    template_name = 'designapp/manage_categories.html'
+
+    def get(self, request):
+        categories = Category.objects.all()
+        return render(request, self.template_name, {'categories': categories})
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class CategoryCreateView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def post(self, request):
+        name = request.POST.get('name')
+        if name:
+            Category.objects.create(name=name)
+            messages.success(request, 'Категория добавлена!')
+        else:
+            messages.error(request, 'Введите название категории.')
+        return redirect('designapp:admin-category-list')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class CategoryDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def post(self, request, category_id):
+        try:
+            category = Category.objects.get(id=category_id)
+            category.delete()  # Удаление категории
+            messages.success(request, 'Категория удалена!')
+        except Category.DoesNotExist:
+            messages.error(request, 'Категория не найдена.')
+        return redirect('designapp:admin-category-list')
+
+    def test_func(self):
+        return self.request.user.is_superuser

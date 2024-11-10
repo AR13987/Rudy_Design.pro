@@ -75,8 +75,8 @@ import os
 class Application(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
     timestamp = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=255)
-    description = models.TextField()
+    title = models.CharField(max_length=255, blank=False)
+    description = models.TextField(blank=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     status = models.CharField(max_length=50, default='Новая')  # Например, 'Принято в работу', 'Выполнено', 'Новая'
     photo = models.ImageField(upload_to='photos/', null=True, blank=False)

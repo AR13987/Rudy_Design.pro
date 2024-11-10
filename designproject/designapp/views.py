@@ -94,3 +94,12 @@ from django.contrib.auth import login, authenticate, logout
 def logout_user(request):
     logout(request)
     return render(request,'registration/logged_out.html')
+
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
+class AdminProfileView(LoginRequiredMixin, UserPassesTestMixin, generic.TemplateView):
+    template_name = 'designapp/admin_profile.html'
+
+    def test_func(self):
+        return self.request.user.is_superuser  # Проверка, является ли пользователь администратором

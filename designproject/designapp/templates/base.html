@@ -14,10 +14,14 @@
             <ul>
                 <li><a href="{% url 'designapp:index' %}">Главная</a></li>
                 {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                <li><a href="{% url 'designapp:admin-profile' %}">Личный кабинет администратора</a></li>
+                {% else %}
                 <li><a href="{% url 'designapp:profile' %}">Личный кабинет</a></li>
+                {% endif %}
                 <form method="post" action="{% url 'designapp:logout' %}">
-                {% csrf_token %}
-                <button type="submit">Выйти</button>
+                    {% csrf_token %}
+                    <button type="submit">Выйти</button>
                 </form>
                 {% else %}
                 <li><a href="{% url 'designapp:login' %}">Войти</a></li>

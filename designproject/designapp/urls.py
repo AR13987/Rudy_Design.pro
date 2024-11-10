@@ -23,3 +23,8 @@ urlpatterns += [
     path('admin_categories_delete/<int:category_id>/', views.CategoryDeleteView.as_view(), name='admin-category-delete'),
     path('admin_change_status/<int:application_id>/', views.ChangeStatusView.as_view(), name='change-status'),
 ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

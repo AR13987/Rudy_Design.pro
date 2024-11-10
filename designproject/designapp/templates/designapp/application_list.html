@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}<title>Личный кабинет</title>{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="sidebar">
+            <h2>Меню</h2>
+            <ul>
+            </ul>
+        </div>
+
+        <main>
+            <h2>Мои заявки</h2>
+
+            <!-- Форма для фильтрации -->
+            <form method="get" action="">
+                <label for="status">Новые заявки:</label>
+                <select name="status" id="status" onchange="this.form.submit()">
+                    <option value="Новая">Новая</option>
+                </select>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Категория</th>
+                        <th>Дата создания</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td><a href="{{ application.get_absolute_url }}">{{ application.title }}</a></td>
+                        <td>{{ application.category }}</td>
+                        <td>{{ application.timestamp }}</td>
+                        <td>{{ application.status }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">Заявок нет.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+{% endblock %}

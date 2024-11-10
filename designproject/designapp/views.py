@@ -19,6 +19,15 @@ def index(request):
 from django.views import generic
 class ApplicationListView(generic.ListView):
     model = Application
+    template_name = 'designapp/application_list.html'
+    context_object_name = 'applications'
+
+    def get_queryset(self):
+        queryset = Application.objects.filter(user=self.request.user)
+        status = self.request.GET.get('status')  # Получаем статус из GET-параметров
+        if status:
+            queryset = queryset.filter(status=status)  # Фильтруем по статусу
+        return queryset
 
 
 from django.shortcuts import redirect

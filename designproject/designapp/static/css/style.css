@@ -70,6 +70,29 @@ main {
     border-radius: 5px;
 }
 
+.sidebar {
+    width: 200px;
+    padding: 20px;
+    margin: 20px;
+    background-color: #f4f4f4;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
 .project-list {
     list-style: none;
     padding: 0;

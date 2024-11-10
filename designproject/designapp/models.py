@@ -66,10 +66,12 @@ class DesignSuggestion(models.Model):
 
 # Заявки:
 class Application(models.Model):
-    title = models.CharField(max_length=255)
-    category = models.CharField(max_length=255)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
     timestamp = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=50)  # Например, 'Принято в работу' или 'Выполнено'
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    category = models.CharField(max_length=255)
+    status = models.CharField(max_length=50, default='Новая')  # Например, 'Принято в работу', 'Выполнено', 'Новая'
 
     def get_absolute_url(self):
         return reverse('application-detail', args=[str(self.id)])

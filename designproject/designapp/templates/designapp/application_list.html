@@ -1,49 +1,52 @@
 {% extends "base.html" %}
 {% block title %}<title>Личный кабинет</title>{% endblock %}
 {% block content %}
-    <div class="container">
-        <div class="sidebar">
-            <h2>Меню</h2>
-            <ul>
-                <li><a href="{% url 'designapp:application-create' %}">Создание заявки</a></li>
-            </ul>
-        </div>
-
-        <main>
-            <h2>Мои заявки:</h2>
-            <form method="get" action="">
-            <select name="status" id="status" onchange="this.form.submit()">
-                <option value="Новая" {% if request.GET.status == Новая %}selected{% endif %}>Новые</option>
-            </select>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>Категория</th>
-                        <th>Дата создания</th>
-                        <th>Статус</th>
-                        <th>Изображение</th>
-                        <th>Удалить заявку</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for application in applications %}
-                    <tr>
-                        <td>{{ application.title }}</td>
-                        <td>{{ application.category }}</td>
-                        <td>{{ application.timestamp }}</td>
-                        <td>{{ application.status }}</td>
-                        <td>{{ application.photo_name }}</td>
-                        <td><a href="{% url 'designapp:application-delete' application.id %}">Удалить</a></td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6">Заявок нет, либо они приняты в работу или выполнены</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            </form>
-        </main>
+<div class="container">
+    <div class="sidebar">
+        <h2>Меню</h2>
+        <ul>
+            <li><a href="{% url 'designapp:application-create' %}">Создание заявки</a></li>
+        </ul>
     </div>
+
+    <main>
+        <h2>Мои заявки:</h2>
+        <form method="get" action="">
+            <select name="status" id="status" onchange="this.form.submit()">
+                <option value="Новая" {% if request.GET.status == 'Новая' %}selected{% endif %}>Новые</option>
+                <option value="Принято в работу" {% if request.GET.status == 'Принято в работу' %}selected{% endif %}>Принятые в работу</option>
+                <option value="Выполнено" {% if request.GET.status == 'Выполнено' %}selected{% endif %}>Выполненные</option>
+            </select>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Категория</th>
+                    <th>Дата создания</th>
+                    <th>Статус</th>
+                    <th>Изображение</th>
+                    <th>Удалить заявку</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                <tr>
+                    <td>{{ application.title }}</td>
+                    <td>{{ application.category }}</td>
+                    <td>{{ application.timestamp }}</td>
+                    <td>{{ application.status }}</td>
+                    <td>{{ application.photo_name }}</td>
+                        <td><a href="{% url 'designapp:application-delete' application.id %}">Удалить</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">Заявок нет</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</div>
 {% endblock %}

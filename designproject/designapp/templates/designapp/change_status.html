@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}<title>Смена статуса заявки</title>{% endblock %}
+{% block content %}
+<a href="{% url 'designapp:admin-profile' %}">Назад</a>
+<div class="admin-change-status">
+    <h2>Смена статуса заявки: {{ application.title }}</h2>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="status">Выберите новый статус:</label>
+        <select name="status" id="status" required onchange="this.form.submit()">
+            <option value="">-- Выберите статус --</option>
+            <option value="Выполнено" {% if application.status == "Выполнено" or request.POST.status == "Выполнено" %}selected{% endif %}>Выполнено (с изображением)</option>
+            <option value="Принято в работу" {% if application.status == "Принято в работу" or request.POST.status == "Принято в работу" %}selected{% endif %}>Принято в работу (с комментарием)</option>
+        </select><br><br>
+
+        <div id="design-image-field" style="display: {% if request.POST.status == 'Выполнено' %}block{% else %}none{% endif %};">
+            <label for="design_image">Прикрепите изображение созданного дизайна:</label>
+            <input type="file" name="design_image" accept="image/*" {% if application.status != "Выполнено" %}required{% endif %}><br><br>
+        </div>
+
+        <div id="comment-field" style="display: {% if request.POST.status == 'Принято в работу' %}block{% else %}none{% endif %};">
+            <label for="comment">Введите комментарий:</label>
+            <textarea name="comment" required>{% if request.POST.comment %}{{ request.POST.comment }}{% endif %}</textarea><br><br>
+        </div>
+
+        <button type="submit">Изменить статус</button>
+    </form>
+</div>
+{% endblock %}

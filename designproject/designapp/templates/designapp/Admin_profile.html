@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 {% block title %}<title>Личный кабинет администратора</title>{% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="admin-profile">
         <h2>Личный кабинет администратора</h2>
+        <a href="{% url 'designapp:admin-category-list' %}" class="btn">Управление категориями заявок</a>
+
+        {% for application in applications %}
+            <div class="application-item">
+                <h4>{{ application.title }}</h4>
+                <a href="{% url 'designapp:change-status' application.id %}">Смена статуса заявки</a>
+            </div>
+        {% empty %}
+            <p>Нет заявок со статусом "Новая".</p>
+        {% endfor %}
+
     </div>
 {% endblock %}

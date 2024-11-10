@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from .models import Project, FloorPlan, DesignSuggestion, Application
+from .models import Application
 
 
 def index(request):
@@ -104,6 +104,14 @@ class AdminProfileView(LoginRequiredMixin, UserPassesTestMixin, generic.Template
     def test_func(self):
         return self.request.user.is_superuser  # Проверка, является ли пользователь администратором
 
+    def get_context_data(self, **kwargs):
+        # Вызов метода родительского класса, чтобы получить контекст
+        context = super().get_context_data(**kwargs)
+
+        # Получение всех заявок со статусом "Новая"
+        context['applications'] = Application.objects.filter(status='Новая')
+
+        return context
 
 
 from django.contrib import messages
@@ -143,6 +151,45 @@ class CategoryDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         except Category.DoesNotExist:
             messages.error(request, 'Категория не найдена.')
         return redirect('designapp:admin-category-list')
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class ChangeStatusView(LoginRequiredMixin, UserPassesTestMixin, View):
+    def get(self, request, application_id):
+        application = get_object_or_404(Application, id=application_id)
+        return render(request, 'designapp/change_status.html', {'application': application})
+
+    def post(self, request, application_id):
+        application = get_object_or_404(Application, id=application_id)
+
+        status = request.POST.get('status')
+        comment = request.POST.get('comment')
+        design_image = request.FILES.get('design_image')
+
+        if status == 'Принято в работу':
+            if comment:
+                application.status = status
+                application.comment = comment
+                application.save()
+                messages.success(request, 'Статус успешно изменён на "Принято в работу".')
+            else:
+                messages.error(request, 'Необходимо заполнить комментарий для "Принято в работу".')
+
+        elif status == 'Выполнено':
+            if design_image:
+                application.status = status
+                application.design_image = design_image
+                application.save()
+                messages.success(request, 'Статус успешно изменён на "Выполнено".')
+            else:
+                messages.error(request, 'Необходимо загрузить изображение для "Выполнено".')
+
+        return render(request, 'designapp/change_status.html', {
+            'application': application,
+            'messages': messages.get_messages(request)
+        })
 
     def test_func(self):
         return self.request.user.is_superuser

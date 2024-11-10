@@ -46,6 +46,10 @@ main {
     display: inline-block;
 }
 
+.admin-change-status {
+    display: inline-block;
+}
+
 .login-container {
     background-color: #fff;
     padding: 20px;

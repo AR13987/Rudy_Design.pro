@@ -21,4 +21,5 @@ urlpatterns += [
     path('admin_categories/', views.CategoryListView.as_view(), name='admin-category-list'),
     path('admin_categories_add/', views.CategoryCreateView.as_view(), name='admin-category-add'),
     path('admin_categories_delete/<int:category_id>/', views.CategoryDeleteView.as_view(), name='admin-category-delete'),
+    path('admin_change_status/<int:application_id>/', views.ChangeStatusView.as_view(), name='change-status'),
 ]

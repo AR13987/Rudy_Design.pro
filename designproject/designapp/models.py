@@ -31,47 +31,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-from django.urls import reverse
-class Project(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='projects')
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def get_absolute_url(self):
-        return reverse('project-detail', args=[str(self.id)])
-
-    def __str__(self):
-        return self.title
-
-
-class FloorPlan(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='floor_plans')
-    file_path = models.CharField(max_length=255)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-
-    def get_absolute_url(self):
-        return reverse('floorplan-detail', args=[str(self.id)])
-
-    def __str__(self):
-        return f"План для {self.project.title}"
-
-
-class DesignSuggestion(models.Model):
-    floor_plan = models.ForeignKey(FloorPlan, on_delete=models.CASCADE, related_name='design_suggestions')
-    designer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='design_suggestions')
-    suggestion_text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def get_absolute_url(self):
-        return reverse('designsuggestion-detail', args=[str(self.id)])
-
-    def __str__(self):
-        return f"Предложение по {self.floor_plan}"
-
 
 # Заявки:
 import os
+from django.urls import reverse
 class Application(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -80,6 +43,8 @@ class Application(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     status = models.CharField(max_length=50, default='Новая')  # Например, 'Принято в работу', 'Выполнено', 'Новая'
     photo = models.ImageField(upload_to='photos/', null=True, blank=False)
+    comment = models.TextField(null=True, blank=False)
+    design_image = models.ImageField(upload_to='designs/', null=True, blank=False)
 
     @property
     def photo_name(self):

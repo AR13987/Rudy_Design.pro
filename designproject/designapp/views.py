@@ -50,7 +50,7 @@ def delete_application(request, application_id):
     application = get_object_or_404(Application, id=application_id)
     if request.method == 'POST':
         application.delete()
-        return redirect('designapp:profile')  # Замените на ваш URL для списка заявок
+        return redirect('designapp:profile')
     return render(request, 'designapp/confirm_delete.html', {'application': application})
 
 

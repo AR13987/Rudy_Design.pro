@@ -6,7 +6,7 @@
     <!-- Пример заявок -->
     {% for application in applications %}
     <div class="application">
-        <img src="{{ application.image.url }}" alt="{{ application.title }}">
+        <img src="{{ application.photo.url }}" alt="{{ application.title }}">
         <p><strong>Временная метка:</strong> {{ application.timestamp }}</p>
         <p><strong>Название:</strong> {{ application.title }}</p>
         <p><strong>Категория:</strong> {{ application.category }}</p>

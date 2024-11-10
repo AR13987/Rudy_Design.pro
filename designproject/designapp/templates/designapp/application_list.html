@@ -6,13 +6,15 @@
             <h2>Меню</h2>
             <ul>
                 <li><a href="{% url 'designapp:application-create' %}">Создание заявки</a></li>
-
             </ul>
         </div>
 
         <main>
             <h2>Мои заявки:</h2>
-
+            <form method="get" action="">
+            <select name="status" id="status" onchange="this.form.submit()">
+                <option value="Новая" {% if request.GET.status == Новая %}selected{% endif %}>Новые</option>
+            </select>
             <table>
                 <thead>
                     <tr>
@@ -21,6 +23,7 @@
                         <th>Дата создания</th>
                         <th>Статус</th>
                         <th>Изображение</th>
+                        <th>Удалить заявку</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,14 +34,16 @@
                         <td>{{ application.timestamp }}</td>
                         <td>{{ application.status }}</td>
                         <td>{{ application.photo_name }}</td>
+                        <td><a href="{% url 'designapp:application-delete' application.id %}">Удалить</a></td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="4">Заявок нет.</td>
+                        <td colspan="6">Заявок нет, либо они приняты в работу или выполнены</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            </form>
         </main>
     </div>
 {% endblock %}

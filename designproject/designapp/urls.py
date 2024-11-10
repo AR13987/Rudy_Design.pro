@@ -13,5 +13,5 @@ urlpatterns = [
 
 urlpatterns += [
     path('/create', views.create_application, name='application-create'),
-
+    path('application/<int:application_id>/delete/', views.delete_application, name='application-delete'),
 ]
